@@ -11,4 +11,6 @@
 ##########################
 # VS Generated Files #
 ##########################
+
 *.VC.db
+BuildingScape/BuildingScape.VC.VC.opendb
