@@ -92,21 +92,28 @@ void UGrabber::Grab()
 
 	if (ActorHit)
 	{
-		PhysicsHandle->GrabComponent
-		(
-			ComponentToGrab, 
-			NAME_None, 
-			ComponentToGrab->GetOwner()->GetActorLocation(),
-			true // allow rotation
-		);
+		if (PhysicsHandle != nullptr)
+		{
+			PhysicsHandle->GrabComponent
+			(
+				ComponentToGrab,
+				NAME_None,
+				ComponentToGrab->GetOwner()->GetActorLocation(),
+				true // allow rotation
+			);
+
+		}
 	}	
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab button released!"));
-
-	PhysicsHandle->ReleaseComponent();
+	
+	if (PhysicsHandle != nullptr)
+	{
+		PhysicsHandle->ReleaseComponent();
+	}
 }
 
 // Refactoring code: first lines of GetReachLineStart() and GetReachLineEnd()
@@ -142,7 +149,7 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	// If the physics handle is attached
-	if (PhysicsHandle->GrabbedComponent)
+	if (PhysicsHandle != nullptr && PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(GetReachLineEnd());
 	}

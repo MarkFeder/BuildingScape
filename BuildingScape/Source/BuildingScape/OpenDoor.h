@@ -36,7 +36,7 @@ private:
 
 	// The pressure plate the door is attached to
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
 	// The delay of the open door
 	UPROPERTY(EditAnywhere)
@@ -46,10 +46,10 @@ private:
 	float LastDoorOpenTime;
 
 	// The Actor that opens the door
-	AActor* ActorThatOpens;
+	AActor* ActorThatOpens = nullptr;
 
 	// The Owner of this object
-	AActor* Owner;
+	AActor* Owner = nullptr;
 
 	// Handler to manage the time
 	FTimerHandle TimerHandle;

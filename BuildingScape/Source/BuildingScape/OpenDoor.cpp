@@ -96,6 +96,8 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (PressurePlate == nullptr) { return; }
+	
 	// Find the owning actor
 	Owner = GetOwner();
 
