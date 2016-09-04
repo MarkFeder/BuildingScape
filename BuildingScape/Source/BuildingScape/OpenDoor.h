@@ -6,6 +6,9 @@
 #include "OpenDoor.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGSCAPE_API UOpenDoor : public UActorComponent
 {
@@ -15,24 +18,25 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
-	// Open the door after satisfying the condition
-	void OpenDoor();
-	
-	// Close the door after satisfying the condition
-	void CloseDoor();
-
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
-		
-private:
+public:
+	
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent OnOpenRequest;
 
+	UPROPERTY(BlueprintAssignable)
+	FDoorEvent OnCloseRequest;
+		
 	// The angle of the door
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 	float OpenAngle = 45.0f;
+
+private:
 
 	// The pressure plate the door is attached to
 	UPROPERTY(EditAnywhere)
@@ -53,6 +57,9 @@ private:
 
 	// Handler to manage the time
 	FTimerHandle TimerHandle;
+
+	// Minimum mass value to trigger the PressurePlate
+	float TriggerMass = 60.0f;
 
 private:
 

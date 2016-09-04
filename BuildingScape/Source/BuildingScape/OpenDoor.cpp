@@ -54,9 +54,9 @@ void UOpenDoor::TriggerEnter(AActor* OverlappedActor, AActor* OtherActor)
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("The name of OverlappedActor is : %s"), *OverlappedActorName));
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("The name of OtherActor is : %s"), *OtherActorName));
 
-	if (GetTotalMassOfActorsOnPlate() > 60.0f)
+	if (GetTotalMassOfActorsOnPlate() > TriggerMass)
 	{
-		OpenDoor();
+		OnOpenRequest.Broadcast();
 	}
 }
 
@@ -69,26 +69,8 @@ void UOpenDoor::TriggerExit(AActor* OverlappedActor, AActor* OtherActor)
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Blue, FString::Printf(TEXT("The name of OverlappedActor is : %s"), *OverlappedActorName));
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("The name of OtherActor is : %s"), *OtherActorName));
 
-
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UOpenDoor::CloseDoor, DoorCloseDelay, false, -1.0f);
-}
-
-void UOpenDoor::OpenDoor()
-{
-	// Create a rotator
-	FRotator NewRotation = FRotator(0.0f, OpenAngle, 0.0f);
-
-	// Set the door rotation
-	Owner->SetActorRotation(NewRotation);
-}
-
-void UOpenDoor::CloseDoor()
-{
-	// Create a rotator
-	FRotator NewRotation = FRotator(0.0f, 0.0f, 0.0f);
-	
-	// Set the door rotation
-	Owner->SetActorRotation(NewRotation);
+	OnCloseRequest.Broadcast();
+	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UOpenDoor::CloseDoor, DoorCloseDelay, false, -1.0f);
 }
 
 // Called when the game starts
