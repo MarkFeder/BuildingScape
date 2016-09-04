@@ -15,8 +15,10 @@ public:
 	// Sets default values for this component's properties
 	UOpenDoor();
 
+	// Open the door after satisfying the condition
 	void OpenDoor();
 	
+	// Close the door after satisfying the condition
 	void CloseDoor();
 
 	// Called when the game starts
@@ -59,4 +61,6 @@ private:
 
 	UFUNCTION()
 	void TriggerExit(AActor* OverlappedActor, AActor* OtherActor);
+
+	float GetTotalMassOfActorsOnPlate() const;
 };

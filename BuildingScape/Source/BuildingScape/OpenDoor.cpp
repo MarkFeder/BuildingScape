@@ -3,6 +3,7 @@
 #include "BuildingScape.h"
 #include "OpenDoor.h"
 
+#define OUT
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -15,6 +16,36 @@ UOpenDoor::UOpenDoor()
 	// ...
 }
 
+float UOpenDoor::GetTotalMassOfActorsOnPlate() const
+{
+	float TotalMass = 0.f;
+
+	// Find all the overlapping actors
+	TArray<AActor*> OverlappingActors;
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+
+	// Iterate through them by adding their masses	
+	//for (auto It = OverlappingActors.CreateIterator(); It; ++It)
+	//{
+	//	auto OverlappedActor = *It;
+	//}
+
+	for (auto& OverlappingActor : OverlappingActors)
+	{
+		float ActorMass = OverlappingActor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+
+		if (ActorMass != NULL && ActorMass > 0.0f)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("The mass of the actor %s is %f"), *(OverlappingActor->GetName()), ActorMass);
+			
+			TotalMass += ActorMass;
+		}
+	}
+
+	return TotalMass;
+}
+
+
 void UOpenDoor::TriggerEnter(AActor* OverlappedActor, AActor* OtherActor)
 {
 	FString OverlappedActorName = OverlappedActor->GetName();
@@ -23,7 +54,10 @@ void UOpenDoor::TriggerEnter(AActor* OverlappedActor, AActor* OtherActor)
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("The name of OverlappedActor is : %s"), *OverlappedActorName));
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, FString::Printf(TEXT("The name of OtherActor is : %s"), *OtherActorName));
 
-	OpenDoor();
+	if (GetTotalMassOfActorsOnPlate() > 60.0f)
+	{
+		OpenDoor();
+	}
 }
 
 void UOpenDoor::TriggerExit(AActor* OverlappedActor, AActor* OtherActor)
